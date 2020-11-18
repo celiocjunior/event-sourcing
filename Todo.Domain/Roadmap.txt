@@ -1,0 +1,12 @@
+﻿[ ] Basic single todo list
+[ ] Archive itens
+[ ] Support for multiples lists
+[ ] Archive lists
+[ ] Support move items between lists
+[ ] Support clone items from/to other list
+[ ] Support clone the whole list
+[ ] Support multiple users
+[ ] Support multiple tenants
+[ ] Support teams within the same tenant
+[ ] Support permissions on teams lists [read-only; create; update; delete-own; delete-others]
+[ ] Support public lists [read-only; read-write]
