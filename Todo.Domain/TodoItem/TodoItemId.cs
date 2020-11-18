@@ -27,5 +27,15 @@ namespace Todo.Domain.TodoItem
         {
             return HashCode.Combine(Id);
         }
+
+        public static bool operator ==(TodoItemId left, TodoItemId right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(TodoItemId left, TodoItemId right)
+        {
+            return !(left == right);
+        }
     }
 }

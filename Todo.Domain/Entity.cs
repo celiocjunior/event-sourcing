@@ -32,9 +32,7 @@ namespace Todo.Domain
 
         protected void Apply(IEvent e)
         {
-            // pass each event to modify current in-memory state
             State.Mutate(e);
-            // append event to change list for further persistence
             _changes.Add(e);
         }
     }
