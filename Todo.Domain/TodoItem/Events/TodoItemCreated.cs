@@ -12,10 +12,13 @@ namespace Todo.Domain.TodoItem.Events
 
         public TodoItemId TodoItemId { get; }
 
-        public string Description { get; private set; }
+        public string Description { get; }
+
+        public string EventType { get; }
 
         public TodoItemCreated(TodoItemId todoItemId, string description)
         {
+            EventType = GetType().Name;
             EventVersion = EVENT_VERSION;
             OcurredOn = DateTime.UtcNow;
             TodoItemId = todoItemId;

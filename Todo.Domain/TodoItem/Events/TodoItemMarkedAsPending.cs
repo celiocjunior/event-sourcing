@@ -14,8 +14,11 @@ namespace Todo.Domain.TodoItem.Events
 
         public bool Done { get; }
 
+        public string EventType { get; }
+
         public TodoItemMarkedAsPending(TodoItemId todoItemId)
         {
+            EventType = GetType().Name;
             EventVersion = EVENT_VERSION;
             OcurredOn = DateTime.UtcNow;
             TodoItemId = todoItemId;

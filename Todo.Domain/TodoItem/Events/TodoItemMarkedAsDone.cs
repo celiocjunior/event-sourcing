@@ -12,8 +12,11 @@ namespace Todo.Domain.TodoItem.Events
 
         public TodoItemId TodoItemId { get; }
 
+        public string EventType { get; }
+
         public TodoItemMarkedAsDone(TodoItemId todoItemId)
         {
+            EventType = GetType().Name;
             EventVersion = EVENT_VERSION;
             OcurredOn = DateTime.UtcNow;
             TodoItemId = todoItemId;

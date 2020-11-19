@@ -38,9 +38,8 @@ namespace Todo.Domain.TodoItem
             return !(left == right);
         }
 
-        string IIdentity.ToString()
-        {
-            return Id.ToString();
-        }
+        public override string ToString() => Id.ToString();
+
+        public string AsString() => ToString();
     }
 }

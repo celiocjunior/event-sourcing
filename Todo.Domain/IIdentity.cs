@@ -2,6 +2,6 @@
 {
     public interface IIdentity
     {
-        string ToString();
+        string AsString();
     }
 }

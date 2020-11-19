@@ -6,5 +6,6 @@ namespace Todo.Domain
     {
         public int EventVersion { get; }
         public DateTime OcurredOn { get; }
+        public string EventType { get; }
     }
 }

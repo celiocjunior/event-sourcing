@@ -16,8 +16,11 @@ namespace Todo.Domain.TodoItem.Events
 
         public string NewDescription { get; }
 
+        public string EventType { get; }
+
         public TodoItemDescriptionUpdated(TodoItemId todoItemId, string oldDescription, string newDescription)
         {
+            EventType = GetType().Name;
             EventVersion = EVENT_VERSION;
             OcurredOn = DateTime.UtcNow;
             TodoItemId = todoItemId;
