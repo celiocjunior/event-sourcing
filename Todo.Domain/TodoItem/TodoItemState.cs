@@ -3,7 +3,11 @@ using Todo.Domain.TodoItem.Events;
 
 namespace Todo.Domain.TodoItem
 {
-    public class TodoItemState : State
+    public class TodoItemState : State,
+        IEventHandler<TodoItemCreated>,
+        IEventHandler<TodoItemMarkedAsDone>,
+        IEventHandler<TodoItemMarkedAsPending>,
+        IEventHandler<TodoItemDescriptionUpdated>
     {
         public TodoItemId Id { get; private set; } = new TodoItemId(Guid.Empty);
         public DateTime CreatedOn { get; private set; } = DateTime.MinValue;

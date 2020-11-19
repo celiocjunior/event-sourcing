@@ -30,7 +30,8 @@ namespace Todo.Domain
                 throw new ArgumentException("Event stream is empty", nameof(events));
         }
 
-        protected void Apply(IEvent e)
+        protected void Apply<TEvent>(TEvent e)
+            where TEvent : IEvent
         {
             State.Mutate(e);
             _changes.Add(e);

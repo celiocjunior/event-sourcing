@@ -5,7 +5,7 @@ namespace Todo.Domain.EventStore
     public interface IEventStore
     {
         EventStream LoadEventStream(IIdentity id);
-        EventStream LoadEventStream(IIdentity id, long skipEvents, int maxCount);
-        void AppendToStream(IIdentity id, long expectedVersion, IEnumerable<IEvent> events);
+        EventStream LoadEventStream(IIdentity id, long skip, int take);
+        void AppendToStream(IIdentity id, long originalVersion, IEnumerable<IEvent> events);
     }
 }
