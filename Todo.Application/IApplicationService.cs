@@ -2,6 +2,7 @@
 {
     public interface IApplicationService
     {
-        void Execute(ICommand cmd);
+        void Execute<TCommand>(TCommand cmd)
+            where TCommand : ICommand;
     }
 }

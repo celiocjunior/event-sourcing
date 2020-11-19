@@ -5,7 +5,11 @@ using Todo.Domain.TodoItem;
 
 namespace Todo.Application.TodoList
 {
-    public class TodoListApplicationService : IApplicationService
+    public class TodoListApplicationService : IApplicationService,
+        ICommandHandler<CreateTodoItem>,
+        ICommandHandler<MarkTodoItemAsDone>,
+        ICommandHandler<MarkTodoItemAsPending>,
+        ICommandHandler<UpdateTodoItemDescription>
     {
         private readonly IEventStore _eventStore;
 
@@ -16,7 +20,7 @@ namespace Todo.Application.TodoList
 
         public void When(CreateTodoItem c)
         {
-            const long INITIAL_VERSION = 1;
+            const long INITIAL_VERSION = 0;
 
             var todoItem = new TodoItem(c.Id, c.Description);
             _eventStore.AppendToStream(c.Id, INITIAL_VERSION, todoItem.Changes);
@@ -37,8 +41,8 @@ namespace Todo.Application.TodoList
             Update(c.Id, t => t.UpdateDescription(c.Description));
         }
 
-        public void Execute(ICommand cmd) =>
-            ((dynamic)this).When((dynamic)cmd);
+        public void Execute<TCommand>(TCommand cmd) where TCommand : ICommand =>
+            ((ICommandHandler<TCommand>)this).When(cmd);
 
         private void Update(TodoItemId id, Action<TodoItem> execute)
         {
