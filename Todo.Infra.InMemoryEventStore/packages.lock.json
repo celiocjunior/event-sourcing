@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": {
+    ".NETCoreApp,Version=v5.0": {
+      "todo.domain": {
+        "type": "Project"
+      },
+      "todo.infra.eventstore": {
+        "type": "Project",
+        "dependencies": {
+          "Todo.Domain": "1.0.0"
+        }
+      }
+    }
+  }
+}
