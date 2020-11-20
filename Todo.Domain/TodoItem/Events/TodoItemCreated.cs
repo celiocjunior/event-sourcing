@@ -1,7 +1,10 @@
-﻿namespace Todo.Domain.TodoItem.Events
+﻿using System;
+
+namespace Todo.Domain.TodoItem.Events
 {
     public record TodoItemCreated(
         TodoItemId TodoItemId,
-        string Description
+        string Description,
+        DateTime OcurredOn
     ) : IEvent;
 }

@@ -1,8 +1,11 @@
-﻿namespace Todo.Domain.TodoItem.Events
+﻿using System;
+
+namespace Todo.Domain.TodoItem.Events
 {
     public record TodoItemDescriptionUpdated(
         TodoItemId TodoItemId,
         string OldDescription,
-        string NewDescription
+        string NewDescription,
+        DateTime OcurredOn
     ) : IEvent;
 }

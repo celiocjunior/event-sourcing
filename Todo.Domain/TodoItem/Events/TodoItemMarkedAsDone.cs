@@ -1,6 +1,9 @@
-﻿namespace Todo.Domain.TodoItem.Events
+﻿using System;
+
+namespace Todo.Domain.TodoItem.Events
 {
     public record TodoItemMarkedAsDone(
-        TodoItemId TodoItemId
+        TodoItemId TodoItemId,
+        DateTime OcurredOn
     ) : IEvent;
 }

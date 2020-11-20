@@ -43,8 +43,8 @@ namespace Todo.Domain.Tests.TodoItem
             var description = "Learn event sourcing";
             var events = new IEvent[]
             {
-                new TodoItemCreated(id, description),
-                new TodoItemMarkedAsDone(id)
+                new TodoItemCreated(id, description, DateTime.UtcNow),
+                new TodoItemMarkedAsDone(id, DateTime.UtcNow)
             };
 
             var todoItem = Domain.TodoItem.TodoItem.ReplayEvents(events);
