@@ -1,9 +1,10 @@
-﻿using Todo.Domain.TodoItem;
+﻿using System;
+using Todo.Domain.TodoItem;
 
 namespace Todo.Application.TodoList.Commands
 {
     public class MarkTodoItemAsDone : ICommand
     {
-        public TodoItemId Id { get; set; }
+        public TodoItemId Id { get; set; } = new TodoItemId(Guid.Empty);
     }
 }

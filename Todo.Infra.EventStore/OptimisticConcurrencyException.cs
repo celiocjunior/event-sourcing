@@ -12,14 +12,14 @@ namespace Todo.Infra.EventStore
         public long ActualVersion { get; private set; }
         public long ExpectedVersion { get; private set; }
         public IIdentity Id { get; private set; }
-        public IList<IEvent> ActualEvents { get; private set; }
+        public IEnumerable<IEvent> ActualEvents { get; private set; }
 
         OptimisticConcurrencyException(
             string message,
             long actualVersion,
             long expectedVersion,
             IIdentity id,
-            IList<IEvent> serverEvents)
+            IEnumerable<IEvent> serverEvents)
             : base(message)
         {
             ActualVersion = actualVersion;
@@ -32,7 +32,7 @@ namespace Todo.Infra.EventStore
             long actual,
             long expected,
             IIdentity id,
-            IList<IEvent> serverEvents)
+            IEnumerable<IEvent> serverEvents)
         {
             var message = $"Expected v{expected} but found v{actual} in stream '{id}'";
             return new OptimisticConcurrencyException(message, actual, expected, id, serverEvents);

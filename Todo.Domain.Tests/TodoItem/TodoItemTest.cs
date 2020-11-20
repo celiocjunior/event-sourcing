@@ -23,14 +23,6 @@ namespace Todo.Domain.Tests.TodoItem
                 .Should()
                 .BeOfType(typeof(TodoItemCreated));
 
-            todoItem.State.CreatedOn
-                .Should()
-                .NotBe(DateTime.MinValue);
-
-            todoItem.State.LastUpdateOn
-                .Should()
-                .BeNull();
-
             todoItem.State.Id
                 .Should()
                 .Be(id);
@@ -60,14 +52,6 @@ namespace Todo.Domain.Tests.TodoItem
             todoItem.Changes
                 .Should()
                 .HaveCount(0);
-
-            todoItem.State.CreatedOn
-                .Should()
-                .NotBe(DateTime.MinValue);
-
-            todoItem.State.LastUpdateOn
-                .Should()
-                .NotBeNull();
 
             todoItem.State.Id
                 .Should()
@@ -101,12 +85,6 @@ namespace Todo.Domain.Tests.TodoItem
             // Should have the same result
             todoItemReplay.State.Id
                 .Should().Be(todoItem.State.Id);
-
-            todoItemReplay.State.CreatedOn
-                .Should().Be(todoItem.State.CreatedOn);
-
-            todoItemReplay.State.LastUpdateOn
-                .Should().Be(todoItem.State.LastUpdateOn);
 
             todoItemReplay.State.Done
                 .Should().Be(todoItem.State.Done);

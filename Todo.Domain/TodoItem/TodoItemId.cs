@@ -2,7 +2,7 @@
 
 namespace Todo.Domain.TodoItem
 {
-    public struct TodoItemId : IIdentity, IEquatable<TodoItemId>
+    public class TodoItemId : IIdentity, IEquatable<TodoItemId>
     {
         public Guid Id { get; }
 
@@ -11,8 +11,9 @@ namespace Todo.Domain.TodoItem
             Id = id;
         }
 
-        public bool Equals(TodoItemId other)
+        public bool Equals(TodoItemId? other)
         {
+            if (other is null) return false;
             return Id.Equals(other.Id);
         }
 

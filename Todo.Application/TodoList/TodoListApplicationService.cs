@@ -23,7 +23,9 @@ namespace Todo.Application.TodoList
             const long INITIAL_VERSION = 0;
 
             var todoItem = new TodoItem(c.Id, c.Description);
-            _eventStore.AppendToStream(c.Id, INITIAL_VERSION, todoItem.Changes);
+
+            foreach (var change in todoItem.Changes)
+                _eventStore.AppendToStream(c.Id, INITIAL_VERSION, change);
         }
 
         public void When(MarkTodoItemAsDone c)
@@ -47,9 +49,10 @@ namespace Todo.Application.TodoList
         private void Update(TodoItemId id, Action<TodoItem> execute)
         {
             EventStream stream = _eventStore.LoadEventStream(id);
-            TodoItem customer = TodoItem.ReplayEvents(stream.Events);
-            execute(customer);
-            _eventStore.AppendToStream(id, stream.Version, customer.Changes);
+            TodoItem todoItem = TodoItem.ReplayEvents(stream.Events);
+            execute(todoItem);
+            foreach (var change in todoItem.Changes)
+                _eventStore.AppendToStream(id, stream.Version, change);
         }
     }
 }

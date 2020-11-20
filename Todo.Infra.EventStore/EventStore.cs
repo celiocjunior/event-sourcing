@@ -23,19 +23,15 @@ namespace Todo.Infra.EventStore
                 .ToDictionary(k => k.Name, v => v);
         }
 
-        public void AppendToStream(IIdentity id, long originalVersion, IEnumerable<IEvent> events)
+        public void AppendToStream(IIdentity id, long originalVersion, IEvent @event)
         {
-            var eventsArray = events.ToArray();
-
-            if (eventsArray.Length == 0)
-                return;
-
             var name = id.AsString();
-            var data = SerializeEvent(eventsArray);
+            var data = SerializeEvent(@event);
+            var eventType = @event.GetType().Name;
 
             try
             {
-                _appendOnlyStore.Append(name, data, originalVersion);
+                _appendOnlyStore.Append(eventType, name, data, originalVersion);
             }
             catch (AppendOnlyStoreConcurrencyException e)
             {
@@ -62,46 +58,20 @@ namespace Todo.Infra.EventStore
 
             foreach (var tapeRecord in records)
             {
-                stream.Events.AddRange(GetEventsFromRecord(tapeRecord));
+                stream.AppendEvent(GetEventFromRecord(tapeRecord));
                 stream.Version = tapeRecord.Version;
             }
 
             return stream;
         }
 
-        private IEnumerable<IEvent> GetEventsFromRecord(DataWithVersion record)
-        {
-            using var jsonDocument = DeserializeEvent(record.Data);
+        private IEvent GetEventFromRecord(DataWithVersion record) =>
+            DeserializeEvent(record.Data, _availableEvents[record.EventType]);
 
-            foreach (var item in jsonDocument.RootElement.EnumerateArray())
-            {
-                var json = item.ToString();
-                if (json is null) continue;
+        private static byte[] SerializeEvent(IEvent @event) =>
+            JsonSerializer.SerializeToUtf8Bytes(Convert.ChangeType(@event, @event.GetType()));
 
-                var type = GetEventType(item);
-                var typedEvent = JsonSerializer.Deserialize(json, type);
-                if (typedEvent is null) continue;
-
-                yield return (IEvent)typedEvent;
-            }
-        }
-
-        private Type GetEventType(JsonElement element)
-        {
-            var eventType = element
-                .GetProperty(nameof(IEvent.EventType))
-                .GetString();
-
-            if (eventType is null)
-                throw new InvalidOperationException($"No event type defined in json element: {element}");
-
-            return _availableEvents[eventType];
-        }
-
-        private static byte[] SerializeEvent(IEvent[] @event) =>
-            JsonSerializer.SerializeToUtf8Bytes(@event.Select(_ => Convert.ChangeType(_, _.GetType())));
-
-        private static JsonDocument DeserializeEvent(byte[] data) =>
-            JsonDocument.Parse(new ReadOnlyMemory<byte>(data));
+        private static IEvent DeserializeEvent(byte[] data, Type type) =>
+            (IEvent)(JsonSerializer.Deserialize(new ReadOnlySpan<byte>(data), type) ?? throw new Exception($"Error: {nameof(DeserializeEvent)}"));
     }
 }
