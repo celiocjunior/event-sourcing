@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Todo.Infra.EventStore;
 
 namespace Todo.Infra.InMemoryEventStore
 {
-    public class Record
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public int Version { get; set; }
-        public string EventType { get; set; } = string.Empty;
-        public byte[] Data { get; set; } = Array.Empty<byte>();
-    }
+    public record Record(
+        int Id,
+        string Name,
+        int Version,
+        string EventType,
+        byte[] Data
+    );
 
     public class InMemoryEventStore : IAppendOnlyStore
     {
@@ -30,14 +28,13 @@ namespace Todo.Infra.InMemoryEventStore
             if (version != expectedStreamVersion)
                 throw new AppendOnlyStoreConcurrencyException(version, expectedStreamVersion, streamName);
 
-            records.Add(new Record
-            {
-                Id = currentId++,
-                Name = streamName,
-                Version = version + 1,
-                Data = data,
-                EventType = eventType
-            });
+            records.Add(new Record(
+                currentId++,
+                streamName,
+                version + 1,
+                eventType,
+                data
+            ));
         }
 
         public IEnumerable<DataWithVersion> ReadRecords(string streamName, long afterVersion, int maxCount) =>
