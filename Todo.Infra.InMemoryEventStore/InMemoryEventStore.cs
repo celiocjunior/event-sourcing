@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Todo.Infra.EventStore;
 
@@ -6,7 +7,7 @@ namespace Todo.Infra.InMemoryEventStore
 {
     public record MemoryRecord(
         string Name,
-        int Version,
+        long Version,
         string EventType,
         byte[] Data
     );
@@ -41,19 +42,15 @@ namespace Todo.Infra.InMemoryEventStore
                 .Take(maxCount)
                 .Select(_ => new DataWithVersion(_.Version, _.Data, _.EventType));
 
-        public IEnumerable<DataWithName> ReadRecords(long afterVersion, int maxCount) =>
+        public IEnumerable<DataWithId> ReadRecords(long afterVersion, int maxCount) =>
             records
                 .Where(_ => _.Version > afterVersion)
                 .OrderBy(_ => _.Version)
                 .Take(maxCount)
-                .Select(_ => new DataWithName(_.Name, _.Data, _.EventType));
+                .Select(_ => new DataWithId(_.Name, _.Data, _.EventType));
 
-        public void Close()
-        {
-        }
+        public void Close() { }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() => GC.SuppressFinalize(this);
     }
 }

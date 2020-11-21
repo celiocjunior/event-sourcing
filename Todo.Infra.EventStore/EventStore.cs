@@ -25,24 +25,27 @@ namespace Todo.Infra.EventStore
 
         public void AppendToStream(IIdentity id, long originalVersion, IEvent @event)
         {
-            var name = id.AsString();
+            var streamId = id.AsString();
             var data = SerializeEvent(@event);
             var eventType = @event.GetType().Name;
 
             try
             {
-                _appendOnlyStore.Append(eventType, name, data, originalVersion);
+                _appendOnlyStore.Append(eventType, streamId, data, originalVersion);
+
+                // TODO: publish message
             }
-            catch (AppendOnlyStoreConcurrencyException e)
+            catch (AppendOnlyStoreConcurrencyException ex)
             {
                 // load server events
-                var server = LoadEventStream(id, 0, int.MaxValue);
+                var stream = LoadEventStream(id, 0, int.MaxValue);
                 // throw a real problem
-                throw OptimisticConcurrencyException.Create(server.Version, e.ExpectedStreamVersion, id, server.Events);
+                throw OptimisticConcurrencyException.Create(
+                    stream.Version,
+                    ex.ExpectedStreamVersion,
+                    id,
+                    stream.Events);
             }
-
-            // TODO: technically there should be parallel process that queries new changes from 
-            // event store and sends them via messages. 
         }
 
         public EventStream LoadEventStream(IIdentity id)
@@ -52,14 +55,14 @@ namespace Todo.Infra.EventStore
 
         public EventStream LoadEventStream(IIdentity id, long skip, int take)
         {
-            string name = id.AsString();
-            var records = _appendOnlyStore.ReadRecords(name, skip, take);
+            string streamId = id.AsString();
+            var records = _appendOnlyStore.ReadRecords(streamId, skip, take);
             var stream = new EventStream();
 
-            foreach (var tapeRecord in records)
+            foreach (var record in records)
             {
-                stream.AppendEvent(GetEventFromRecord(tapeRecord));
-                stream.Version = tapeRecord.Version;
+                stream.AppendEvent(GetEventFromRecord(record));
+                stream.Version = record.Version;
             }
 
             return stream;
@@ -72,6 +75,7 @@ namespace Todo.Infra.EventStore
             JsonSerializer.SerializeToUtf8Bytes(Convert.ChangeType(@event, @event.GetType()));
 
         private static IEvent DeserializeEvent(byte[] data, Type type) =>
-            (IEvent)(JsonSerializer.Deserialize(new ReadOnlySpan<byte>(data), type) ?? throw new Exception($"Error: {nameof(DeserializeEvent)}"));
+            (IEvent)(JsonSerializer.Deserialize(new ReadOnlySpan<byte>(data), type)
+            ?? throw new Exception($"Error: {nameof(DeserializeEvent)}"));
     }
 }
