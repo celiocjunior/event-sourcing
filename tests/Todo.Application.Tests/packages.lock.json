@@ -1128,7 +1128,6 @@
       "todo.infra.inmemoryeventstore": {
         "type": "Project",
         "dependencies": {
-          "Todo.Domain": "1.0.0",
           "Todo.Infra.EventStore": "1.0.0"
         }
       }
