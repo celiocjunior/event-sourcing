@@ -1,6 +1,8 @@
 ﻿namespace Todo.Application
 {
-    public interface ICommand
-    {
-    }
+    public interface IBaseCommand { }
+
+    public interface ICommand<out TResult> : IBaseCommand { }
+
+    public interface ICommand : ICommand<Unit> { }
 }

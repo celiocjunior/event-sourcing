@@ -1,8 +1,8 @@
 ﻿namespace Todo.Application
 {
-    public interface ICommandHandler<TCommand>
-        where TCommand : ICommand
+    public interface ICommandHandler<in TCommand, TResult>
+        where TCommand : ICommand<TResult>
     {
-        void When(TCommand command);
+        TResult When(TCommand command);
     }
 }

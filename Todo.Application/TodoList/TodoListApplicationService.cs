@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Todo.Application.TodoList.Commands;
 using Todo.Domain.EventStore;
 using Todo.Domain.TodoItem;
@@ -6,10 +7,10 @@ using Todo.Domain.TodoItem;
 namespace Todo.Application.TodoList
 {
     public class TodoListApplicationService : IApplicationService,
-        ICommandHandler<CreateTodoItem>,
-        ICommandHandler<MarkTodoItemAsDone>,
-        ICommandHandler<MarkTodoItemAsPending>,
-        ICommandHandler<UpdateTodoItemDescription>
+        ICommandHandler<CreateTodoItem, TodoItemId>,
+        ICommandHandler<MarkTodoItemAsDone, Unit>,
+        ICommandHandler<MarkTodoItemAsPending, Unit>,
+        ICommandHandler<UpdateTodoItemDescription, Unit>
     {
         private readonly IEventStore _eventStore;
 
@@ -18,33 +19,47 @@ namespace Todo.Application.TodoList
             _eventStore = eventStore;
         }
 
-        public void When(CreateTodoItem c)
+        public TResult Execute<TResult>(ICommand<TResult> cmd) =>
+            (TResult)GetType()
+                .GetMethod(nameof(When), new[] { cmd.GetType() })
+                ?.Invoke(this, new[] { cmd })
+                ?? throw new InvalidOperationException();
+
+        public TodoItemId When(CreateTodoItem command)
         {
+            var id = new TodoItemId(Guid.NewGuid());
+
+            EventStream stream = _eventStore.LoadEventStream(id);
+            if (stream.Events.Any())
+                throw new InvalidOperationException($"Todo item with id ({id}) already exists");
+
             const long INITIAL_VERSION = 0;
 
-            var todoItem = new TodoItem(c.Id, c.Description);
+            var todoItem = new TodoItem(id, command.Description);
 
             foreach (var change in todoItem.Changes)
-                _eventStore.AppendToStream(c.Id, INITIAL_VERSION, change);
+                _eventStore.AppendToStream(id, INITIAL_VERSION, change);
+
+            return id;
         }
 
-        public void When(MarkTodoItemAsDone c)
+        public Unit When(MarkTodoItemAsDone command)
         {
-            Update(c.Id, t => t.MarkAsDone());
+            Update(command.Id, t => t.MarkAsDone());
+            return Unit.Value;
         }
 
-        public void When(MarkTodoItemAsPending c)
+        public Unit When(MarkTodoItemAsPending command)
         {
-            Update(c.Id, t => t.MarkAsPending());
+            Update(command.Id, t => t.MarkAsPending());
+            return Unit.Value;
         }
 
-        public void When(UpdateTodoItemDescription c)
+        public Unit When(UpdateTodoItemDescription command)
         {
-            Update(c.Id, t => t.UpdateDescription(c.Description));
+            Update(command.Id, t => t.UpdateDescription(command.Description));
+            return Unit.Value;
         }
-
-        public void Execute<TCommand>(TCommand cmd) where TCommand : ICommand =>
-            ((ICommandHandler<TCommand>)this).When(cmd);
 
         private void Update(TodoItemId id, Action<TodoItem> execute)
         {

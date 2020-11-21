@@ -10,7 +10,7 @@ namespace Todo.Domain
             {
                 GetType()
                     .GetMethods()
-                    .Single(_ => _.Name == "When" && _.GetParameters().Single().ParameterType == e.GetType())
+                    .Single(_ => _.Name == nameof(IEventHandler<TEvent>.When) && _.GetParameters().Single().ParameterType == e.GetType())
                     .Invoke(this, new object[] { e });
 
                 return;

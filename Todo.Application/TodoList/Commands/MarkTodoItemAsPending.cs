@@ -1,10 +1,8 @@
-﻿using System;
-using Todo.Domain.TodoItem;
+﻿using Todo.Domain.TodoItem;
 
 namespace Todo.Application.TodoList.Commands
 {
-    public class MarkTodoItemAsPending : ICommand
-    {
-        public TodoItemId Id { get; set; } = new TodoItemId(Guid.Empty);
-    }
+    public record MarkTodoItemAsPending(
+        TodoItemId Id
+    ) : ICommand;
 }
