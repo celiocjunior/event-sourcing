@@ -4,8 +4,7 @@ using Todo.Infra.EventStore;
 
 namespace Todo.Infra.InMemoryEventStore
 {
-    public record Record(
-        int Id,
+    public record MemoryRecord(
         string Name,
         int Version,
         string EventType,
@@ -14,10 +13,9 @@ namespace Todo.Infra.InMemoryEventStore
 
     public class InMemoryEventStore : IAppendOnlyStore
     {
-        private int currentId = 1;
-        private readonly ICollection<Record> records = new List<Record>();
+        private readonly ICollection<MemoryRecord> records = new List<MemoryRecord>();
 
-        public void Append(string eventType, string streamName, byte[] data, long expectedStreamVersion = -1)
+        public void Append(string eventType, string streamName, byte[] data, long expectedStreamVersion)
         {
             var version = records
                 .Where(_ => _.Name == streamName)
@@ -28,8 +26,7 @@ namespace Todo.Infra.InMemoryEventStore
             if (version != expectedStreamVersion)
                 throw new AppendOnlyStoreConcurrencyException(version, expectedStreamVersion, streamName);
 
-            records.Add(new Record(
-                currentId++,
+            records.Add(new MemoryRecord(
                 streamName,
                 version + 1,
                 eventType,

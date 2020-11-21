@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Application.Tests", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Domain.Tests", "Todo.Domain.Tests\Todo.Domain.Tests.csproj", "{42E15C76-9340-45C8-A284-DEAE3B96AE22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Infra.SqliteEventStore", "Todo.Infra.SqliteEventStore\Todo.Infra.SqliteEventStore.csproj", "{F37F16ED-E26C-427A-B853-D7578E6D02F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{42E15C76-9340-45C8-A284-DEAE3B96AE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42E15C76-9340-45C8-A284-DEAE3B96AE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42E15C76-9340-45C8-A284-DEAE3B96AE22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F37F16ED-E26C-427A-B853-D7578E6D02F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F37F16ED-E26C-427A-B853-D7578E6D02F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F37F16ED-E26C-427A-B853-D7578E6D02F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F37F16ED-E26C-427A-B853-D7578E6D02F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

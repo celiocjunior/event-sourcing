@@ -16,7 +16,7 @@ namespace Todo.Infra.EventStore
         /// <param name="expectedStreamVersion">The server version (supply -1 to append without check).</param>
         /// <exception cref="AppendOnlyStoreConcurrencyException">thrown when expected server version is
         /// supplied and does not match to server version</exception>
-        void Append(string eventType, string streamName, byte[] data, long expectedStreamVersion = -1);
+        void Append(string eventType, string streamName, byte[] data, long expectedStreamVersion);
 
         /// <summary>
         /// Reads the records by stream name.
