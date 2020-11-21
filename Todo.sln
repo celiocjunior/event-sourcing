@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Infra.EventStore", "To
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Infra.InMemoryEventStore", "Todo.Infra.InMemoryEventStore\Todo.Infra.InMemoryEventStore.csproj", "{EAB216F4-3AA9-4A53-B371-373E6754DA12}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.ConsoleApp", "Todo.ConsoleApp\Todo.ConsoleApp.csproj", "{4C770F90-EC35-480E-9951-F5AAF257DF03}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Domain", "Todo.Domain\Todo.Domain.csproj", "{56068986-E913-41FB-9CAB-84941C77C5C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Application", "Todo.Application\Todo.Application.csproj", "{553EE8E0-C865-4A42-ACEA-D791B63D8539}"
@@ -17,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Application.Tests", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Domain.Tests", "Todo.Domain.Tests\Todo.Domain.Tests.csproj", "{42E15C76-9340-45C8-A284-DEAE3B96AE22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Infra.SqliteEventStore", "Todo.Infra.SqliteEventStore\Todo.Infra.SqliteEventStore.csproj", "{F37F16ED-E26C-427A-B853-D7578E6D02F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Infra.SqliteEventStore", "Todo.Infra.SqliteEventStore\Todo.Infra.SqliteEventStore.csproj", "{F37F16ED-E26C-427A-B853-D7578E6D02F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{EAB216F4-3AA9-4A53-B371-373E6754DA12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAB216F4-3AA9-4A53-B371-373E6754DA12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAB216F4-3AA9-4A53-B371-373E6754DA12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4C770F90-EC35-480E-9951-F5AAF257DF03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C770F90-EC35-480E-9951-F5AAF257DF03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C770F90-EC35-480E-9951-F5AAF257DF03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C770F90-EC35-480E-9951-F5AAF257DF03}.Release|Any CPU.Build.0 = Release|Any CPU
 		{56068986-E913-41FB-9CAB-84941C77C5C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56068986-E913-41FB-9CAB-84941C77C5C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56068986-E913-41FB-9CAB-84941C77C5C2}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -44,7 +44,7 @@ namespace Todo.Domain.Tests.TodoItem
             var events = new IEvent[]
             {
                 new TodoItemCreated(id, description, DateTime.UtcNow),
-                new TodoItemMarkedAsDone(id, DateTime.UtcNow)
+                new TodoItemMarkedAsDone(id, DateTime.UtcNow.AddMinutes(5))
             };
 
             var todoItem = Domain.TodoItem.TodoItem.ReplayEvents(events);
@@ -74,7 +74,6 @@ namespace Todo.Domain.Tests.TodoItem
 
             // Create
             var todoItem = new Domain.TodoItem.TodoItem(id, description);
-
             todoItem.MarkAsDone();
             todoItem.UpdateDescription("Learn reactive architecture");
             todoItem.MarkAsPending();
@@ -94,6 +93,12 @@ namespace Todo.Domain.Tests.TodoItem
 
             todoItemReplay.State.Description
                 .Should().Be(todoItem.State.Description);
+
+            todoItemReplay.State.CreatedOn
+                .Should().Be(todoItem.State.CreatedOn);
+
+            todoItemReplay.State.LastUpdateOn
+                .Should().Be(todoItem.State.LastUpdateOn);
         }
     }
 }
