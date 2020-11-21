@@ -23,51 +23,38 @@ namespace Todo.Application.TodoList
             (TResult)GetType()
                 .GetMethod(nameof(When), new[] { cmd.GetType() })
                 ?.Invoke(this, new[] { cmd })
-                ?? throw new InvalidOperationException();
+                ?? throw new MissingMethodException($"No method found for command ({cmd.GetType().Name})");
 
         public TodoItemId When(CreateTodoItem command)
         {
-            var id = new TodoItemId(Guid.NewGuid());
-
-            EventStream stream = _eventStore.LoadEventStream(id);
-            if (stream.Events.Any())
-                throw new InvalidOperationException($"Todo item with id ({id}) already exists");
-
             const long INITIAL_VERSION = 0;
 
+            var id = new TodoItemId(Guid.NewGuid());
             var todoItem = new TodoItem(id, command.Description);
 
-            foreach (var change in todoItem.Changes)
-                _eventStore.AppendToStream(id, INITIAL_VERSION, change);
+            _eventStore.AppendToStream(id, INITIAL_VERSION, todoItem.Changes.Single());
 
             return id;
         }
 
-        public Unit When(MarkTodoItemAsDone command)
-        {
+        public Unit When(MarkTodoItemAsDone command) =>
             Update(command.Id, t => t.MarkAsDone());
-            return Unit.Value;
-        }
 
-        public Unit When(MarkTodoItemAsPending command)
-        {
+        public Unit When(MarkTodoItemAsPending command) =>
             Update(command.Id, t => t.MarkAsPending());
-            return Unit.Value;
-        }
 
-        public Unit When(UpdateTodoItemDescription command)
-        {
+        public Unit When(UpdateTodoItemDescription command) =>
             Update(command.Id, t => t.UpdateDescription(command.Description));
-            return Unit.Value;
-        }
 
-        private void Update(TodoItemId id, Action<TodoItem> execute)
+        private Unit Update(TodoItemId id, Action<TodoItem> execute)
         {
             EventStream stream = _eventStore.LoadEventStream(id);
             TodoItem todoItem = TodoItem.ReplayEvents(stream.Events);
             execute(todoItem);
             foreach (var change in todoItem.Changes)
                 _eventStore.AppendToStream(id, stream.Version, change);
+
+            return Unit.Value;
         }
     }
 }
