@@ -1125,6 +1125,12 @@
           "Todo.Domain": "1.0.0"
         }
       },
+      "todo.infra.inmemoryeventbus": {
+        "type": "Project",
+        "dependencies": {
+          "Todo.Domain": "1.0.0"
+        }
+      },
       "todo.infra.inmemoryeventstore": {
         "type": "Project",
         "dependencies": {

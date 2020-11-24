@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\src\Todo.Application\Todo.Application.csproj" />
     <ProjectReference Include="..\..\src\Todo.Domain\Todo.Domain.csproj" />
     <ProjectReference Include="..\..\src\Todo.Infra.EventStore\Todo.Infra.EventStore.csproj" />
+    <ProjectReference Include="..\..\src\Todo.Infra.InMemoryEventBus\Todo.Infra.InMemoryEventBus.csproj" />
     <ProjectReference Include="..\..\src\Todo.Infra.InMemoryEventStore\Todo.Infra.InMemoryEventStore.csproj" />
   </ItemGroup>
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Todo.Domain;
+using Todo.Domain.EventBus;
 using Todo.Domain.EventStore;
 
 namespace Todo.Infra.EventStore
@@ -10,11 +11,13 @@ namespace Todo.Infra.EventStore
     public class EventStore : IEventStore
     {
         private readonly IAppendOnlyStore _appendOnlyStore;
+        private readonly IEventPublisher _eventPublisher;
         private readonly Dictionary<string, Type> _availableEvents;
 
-        public EventStore(IAppendOnlyStore appendOnlyStore)
+        public EventStore(IAppendOnlyStore appendOnlyStore, IEventPublisher eventPublisher)
         {
             _appendOnlyStore = appendOnlyStore;
+            _eventPublisher = eventPublisher;
 
             var eventType = typeof(IEvent);
             _availableEvents = eventType.Assembly
@@ -32,8 +35,6 @@ namespace Todo.Infra.EventStore
             try
             {
                 _appendOnlyStore.Append(eventType, streamId, data, originalVersion);
-
-                // TODO: publish message
             }
             catch (AppendOnlyStoreConcurrencyException ex)
             {
@@ -46,6 +47,8 @@ namespace Todo.Infra.EventStore
                     id,
                     stream.Events);
             }
+
+            _eventPublisher.Publish(@event);
         }
 
         public EventStream LoadEventStream(IIdentity id)
