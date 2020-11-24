@@ -28,10 +28,38 @@ namespace Todo.Application.Tests.TodoList
         }
 
         [Fact]
-        public void TestTodoItemUsage()
+        public void TestEventStoreUsage()
         {
             TodoItem todoItem;
 
+            var id = Application.Execute(new CreateTodoItem("Learn E/S"));
+            todoItem = GetTodoItem(id);
+            todoItem.State.Id.Should().Be(id);
+            todoItem.State.Description.Should().Be("Learn E/S");
+            todoItem.State.Done.Should().BeFalse();
+
+            Application.Execute(new MarkTodoItemAsDone(id));
+            todoItem = GetTodoItem(id);
+            todoItem.State.Id.Should().Be(id);
+            todoItem.State.Description.Should().Be("Learn E/S");
+            todoItem.State.Done.Should().BeTrue();
+
+            Application.Execute(new UpdateTodoItemDescription(id, "Learn event sourcing"));
+            todoItem = GetTodoItem(id);
+            todoItem.State.Id.Should().Be(id);
+            todoItem.State.Description.Should().Be("Learn event sourcing");
+            todoItem.State.Done.Should().BeTrue();
+
+            Application.Execute(new MarkTodoItemAsPending(id));
+            todoItem = GetTodoItem(id);
+            todoItem.State.Id.Should().Be(id);
+            todoItem.State.Description.Should().Be("Learn event sourcing");
+            todoItem.State.Done.Should().BeFalse();
+        }
+
+        [Fact]
+        public void TestEventBusUsage()
+        {
             var todoItemCreatedSubscriptionCalled1 = false;
             var todoItemCreatedSubscriptionCalled2 = false;
             var todoItemCreatedSubscriptionCalled3 = false;
@@ -56,33 +84,17 @@ namespace Todo.Application.Tests.TodoList
             sub.Dispose();
 
             var id = Application.Execute(new CreateTodoItem("Learn E/S"));
-            todoItem = GetTodoItem(id);
-            todoItem.State.Id.Should().Be(id);
-            todoItem.State.Description.Should().Be("Learn E/S");
-            todoItem.State.Done.Should().BeFalse();
             todoItemCreatedSubscriptionCalled1.Should().BeTrue();
             todoItemCreatedSubscriptionCalled2.Should().BeFalse();
             todoItemCreatedSubscriptionCalled3.Should().BeTrue();
 
             Application.Execute(new MarkTodoItemAsDone(id));
-            todoItem = GetTodoItem(id);
-            todoItem.State.Id.Should().Be(id);
-            todoItem.State.Description.Should().Be("Learn E/S");
-            todoItem.State.Done.Should().BeTrue();
             todoItemMarkedAsDoneSubscriptionCalled.Should().BeTrue();
 
             Application.Execute(new UpdateTodoItemDescription(id, "Learn event sourcing"));
-            todoItem = GetTodoItem(id);
-            todoItem.State.Id.Should().Be(id);
-            todoItem.State.Description.Should().Be("Learn event sourcing");
-            todoItem.State.Done.Should().BeTrue();
             todoItemDescriptionUpdatedSubscriptionCalled.Should().BeTrue();
 
             Application.Execute(new MarkTodoItemAsPending(id));
-            todoItem = GetTodoItem(id);
-            todoItem.State.Id.Should().Be(id);
-            todoItem.State.Description.Should().Be("Learn event sourcing");
-            todoItem.State.Done.Should().BeFalse();
             todoItemMarkedAsPendingSubscriptionCalled.Should().BeTrue();
         }
 
