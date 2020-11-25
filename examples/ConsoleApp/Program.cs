@@ -17,9 +17,9 @@ namespace ConsoleApp
             const string dbName = "todo.db";
             if (File.Exists(dbName)) File.Delete(dbName);
 
-            var appendOnlyeventStore = new SqliteEventStore($"Data Source={dbName}");
+            var appendOnlyEventStore = new SqliteEventStore($"Data Source={dbName}");
             var eventBus = new RabbitMqEventBus("host=localhost");
-            var eventStore = new EventStore(appendOnlyeventStore, eventBus);
+            var eventStore = new EventStore(appendOnlyEventStore, eventBus);
             var appService = new TodoListApplicationService(eventStore);
 
             SubscribeToEvents(eventBus);
@@ -31,6 +31,7 @@ namespace ConsoleApp
 
             // TODO: get projection
 
+            Console.Write("Press any key to exit...");
             Console.ReadKey();
         }
 

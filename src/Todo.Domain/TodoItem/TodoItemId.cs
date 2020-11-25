@@ -4,17 +4,17 @@ namespace Todo.Domain.TodoItem
 {
     public class TodoItemId : IIdentity, IEquatable<TodoItemId>
     {
-        public Guid Id { get; }
+        public Guid Value { get; }
 
-        public TodoItemId(Guid id)
+        public TodoItemId(Guid value)
         {
-            Id = id;
+            Value = value;
         }
 
         public bool Equals(TodoItemId? other)
         {
             if (other is null) return false;
-            return Id.Equals(other.Id);
+            return Value.Equals(other.Value);
         }
 
         public override bool Equals(object? obj)
@@ -26,7 +26,7 @@ namespace Todo.Domain.TodoItem
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id);
+            return HashCode.Combine(Value);
         }
 
         public static bool operator ==(TodoItemId left, TodoItemId right)
@@ -39,7 +39,7 @@ namespace Todo.Domain.TodoItem
             return !(left == right);
         }
 
-        public override string ToString() => Id.ToString();
+        public override string ToString() => Value.ToString();
 
         public string AsString() => ToString();
     }
